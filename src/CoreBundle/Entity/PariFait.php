@@ -190,6 +190,12 @@ class PariFait
         if (!in_array($equipe, $equipesDispos, true)) {
             throw new \Exception('Equipe non valide');
         }
+
+        $sport = $this->getPariDispo()->getSport();
+        if (!$sport->getNulPossible() && $this->getEquipe() == 'nul') {
+            throw new \Exception("Le sport de ce pari n'accepte pas les nuls");
+        }
+
     }
 
     public static function getEquipes()

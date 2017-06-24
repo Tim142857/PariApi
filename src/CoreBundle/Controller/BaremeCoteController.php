@@ -106,23 +106,23 @@ class BaremeCoteController extends FOSRestController
         $http_response = new Response();
 
 
-        $sport = $this->queryRepo()->findOneById($data['id']);
+        $baremeCote = $this->queryRepo()->findOneById($data['id']);
         unset($data['id']);
-        if ($sport == null) {
+        if ($baremeCote == null) {
             return $http_response->setStatusCode(404);
         } else {
-            $form = $this->createForm('CoreBundle\Form\SportType');
+            $form = $this->createForm('CoreBundle\Form\BaremeCoteType');
             $form->handleRequest($request);
+            $form->setData($baremeCote);
             $form->submit($data);
 
             if ($form->isSubmitted()) {
 
                 if ($form->isValid()) {
 
-                    $sport->hydrate($data);
 
                     $em = $this->getDoctrine()->getManager();
-                    $em->persist($sport);
+                    $em->persist($baremeCote);
                     $em->flush();
 
 

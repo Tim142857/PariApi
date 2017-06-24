@@ -3,6 +3,7 @@
 namespace CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Resultat
@@ -30,12 +31,32 @@ class Resultat
     /**
      * @var int
      *
+     * @Assert\Type(
+     *     type="int",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 0,
+     *      minMessage = "Score must be positiv",
+     * )
+     *
      * @ORM\Column(name="scoreEq1", type="integer")
      */
     private $scoreEq1;
 
     /**
      * @var int
+     *
+     * @Assert\Type(
+     *     type="int",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     * @Assert\NotNull()
+     * @Assert\Range(
+     *      min = 0,
+     *      minMessage = "Score must be positiv",
+     * )
      *
      * @ORM\Column(name="scoreEq2", type="integer")
      */

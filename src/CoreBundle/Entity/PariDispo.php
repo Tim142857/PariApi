@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="pari_dispo")
  * @ORM\Entity(repositoryClass="CoreBundle\Repository\PariDispoRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class PariDispo
 {
@@ -86,7 +87,7 @@ class PariDispo
      *      minMessage = "Cote must be positiv",
      * )
      *
-     * @ORM\Column(name="coteNul", type="float", length=255)
+     * @ORM\Column(name="coteNul", type="float", length=255, nullable=true)
      */
     private $coteNul;
 
@@ -302,9 +303,21 @@ class PariDispo
         return $this->parisFaits;
     }
 
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function prePersist()
+    {
+        $sport = $this->getSport();
+        if (!$sport->getNulPossible() && $this->getCoteNul() != null) {
+            throw new \Exception('Ce sport ne permet de donner une cote pour le nul');
+        }
+
+    }
+
     public function hydrate($data)
     {
-        $this->setSport($em);
         $this->setEquipe1($data['equipe1']);
         $this->setEquipe2($data['equipe2']);
         $this->setCote1($data['cote1']);

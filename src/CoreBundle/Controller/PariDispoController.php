@@ -74,11 +74,15 @@ class PariDispoController extends FOSRestController
 
             if ($form->isValid()) {
 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($pariDispo);
-                $em->flush();
+                try {
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($pariDispo);
+                    $em->flush();
 
-                return $http_response->setStatusCode(201);
+                    return $http_response->setStatusCode(201);
+                } catch (\Exception $e) {
+                    return $http_response->setStatusCode(400)->setContent(json_encode(array('CoteNul' => array($e->getMessage()))));
+                }
             } else {
                 return $http_response->setStatusCode(400)->setContent(json_encode($this->getErrorMessages($form)));
             }
@@ -169,12 +173,16 @@ class PariDispoController extends FOSRestController
 
                 if ($form->isValid()) {
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($pariDispo);
-                    $em->flush();
+                    try {
+                        $em = $this->getDoctrine()->getManager();
+//                        $em->persist($pariDispo);
+                        $em->flush();
 
+                        return $http_response->setStatusCode(200);
+                    } catch (\Exception $e) {
+                        return $http_response->setStatusCode(400)->setContent(json_encode(array('CoteNul' => array($e->getMessage()))));
+                    }
 
-                    return $http_response->setStatusCode(200);
                 } else {
                     return $http_response->setStatusCode(400)->setContent(json_encode($this->getErrorMessages($form)));
                 }
