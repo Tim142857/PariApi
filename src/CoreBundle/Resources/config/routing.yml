@@ -1,0 +1,4 @@
+core:
+    type: rest
+    resource: "@CoreBundle/Controller/"
+    options: { i18n: false }

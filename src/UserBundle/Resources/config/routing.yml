@@ -1,0 +1,4 @@
+users:
+    type: rest
+    resource: "@UserBundle/Controller/UserController.php"
+    options: { i18n: false }
