@@ -1,16 +1,10 @@
 <?php
+
 namespace CoreBundle\Controller;
 
-use FOS\UserBundle\Event\GetResponseUserEvent;
-use FOS\UserBundle\Event\FilterUserResponseEvent;
-use FOS\UserBundle\Event\FormEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use FOS\UserBundle\Form\Factory\FactoryInterface;
-use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +24,7 @@ class PariDispoController extends FOSRestController
      * Return a collection of parisDispos
      * @Get("/parisDispos")
      * @ApiDoc(
-     * description = "Return a collection of parisDisPos. [require jwt]",
+     * description = "Return a collection of paris dispos. [require jwt]",
      * statusCodes={
      *      200 = "Return when successfull",
      *      204 = "No content to return",
@@ -39,9 +33,9 @@ class PariDispoController extends FOSRestController
      * section = "ParisDispos"
      * )
      */
-    public function getparisDisPosAction()
+    public function getParisDisposAction()
     {
-        return $this->queryRepo()->findAll();
+        return $this->queryRepo()->findAllByDate();
     }
 
     /**
@@ -92,7 +86,7 @@ class PariDispoController extends FOSRestController
     /**
      * @param $id
      * Return a pariDispo by his id
-     * @Get("/sport/pariDispo/{id}"),
+     * @Get("/pariDispo/{id}"),
      * @ApiDoc(
      * description = "Return one pariDispo by his id. [require jwt]",
      * statusCodes = {
@@ -113,7 +107,7 @@ class PariDispoController extends FOSRestController
      * Delete a pariDispo by his id
      * @Delete("/pariDispo/delete/{id}"),
      * @ApiDoc(
-     * description = "Return one pariDispo by his id. [require jwt]",
+     * description = "Delete a pariDispo by his id[require jwt]",
      * statusCodes = {
      *      200 = "Return when successfull",
      *      404 = "Return when resource not found"

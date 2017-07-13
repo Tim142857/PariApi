@@ -92,6 +92,13 @@ class PariDispo
     private $coteNul;
 
     /**
+     * @var date
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
+    /**
      * @var \Sport
      *
      * @ORM\ManyToOne(targetEntity="Sport", inversedBy="parisDispos")
@@ -323,5 +330,29 @@ class PariDispo
         $this->setCote1($data['cote1']);
         $this->setCote2($data['cote2']);
         $this->setCoteNul($data['coteNul']);
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return PariDispo
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

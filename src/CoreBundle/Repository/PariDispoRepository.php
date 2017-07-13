@@ -10,4 +10,15 @@ namespace CoreBundle\Repository;
  */
 class PariDispoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllByDate()
+    {
+        $date = new \DateTime();
+
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT p FROM CoreBundle:PariDispo p where p.date>:date'
+            )
+            ->setParameter("date", $date)
+            ->getResult();
+    }
 }

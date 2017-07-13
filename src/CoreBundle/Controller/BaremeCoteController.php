@@ -1,4 +1,5 @@
 <?php
+
 namespace CoreBundle\Controller;
 
 use FOS\UserBundle\Event\GetResponseUserEvent;

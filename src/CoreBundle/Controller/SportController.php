@@ -1,4 +1,5 @@
 <?php
+
 namespace CoreBundle\Controller;
 
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -120,7 +121,7 @@ class SportController extends FOSRestController
      * Delete a sport by his id
      * @Delete("/sport/delete/{id}"),
      * @ApiDoc(
-     * description = "Return one sport by his id. [require jwt]",
+     * description = "Delete a sport by his id[require jwt]",
      * statusCodes = {
      *      200 = "Return when successfull",
      *      404 = "Return when resource not found"
