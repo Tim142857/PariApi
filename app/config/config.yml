@@ -99,7 +99,7 @@ fos_rest:
         include_format: false
 
 nelmio_api_doc:
-    name: API Pattern Symfony
+    name: API Paris
     motd:
         template:   'NelmioApiDocBundle::Components/motd.html.twig'
     sandbox:

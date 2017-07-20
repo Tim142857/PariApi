@@ -83,7 +83,7 @@ class PariFaitController extends FOSRestController
                 }
 
             } else {
-                return $http_response->setContent(json_encode($this->getErrorMessages($form)));
+                return $http_response->setStatusCode(400)->setContent(json_encode($this->getErrorMessages($form)));
             }
         }
     }

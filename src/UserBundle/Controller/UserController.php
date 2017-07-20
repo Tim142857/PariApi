@@ -20,7 +20,8 @@ use FOS\RestBundle\Controller\Annotations\Head;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use UserBundle\Entity\User;
 
-class UserController extends FOSRestController {
+class UserController extends FOSRestController
+{
 
     /**
      * Return a collection of users
@@ -35,7 +36,8 @@ class UserController extends FOSRestController {
      * section = "Users"
      * )
      */
-    public function getUsersAction() {
+    public function getUsersAction()
+    {
         return $this->queryRepo()->findAll();
     }
 
@@ -53,7 +55,8 @@ class UserController extends FOSRestController {
      * section = "Users"
      * )
      */
-    public function getUserByUsernameAction($username) {
+    public function getUserByUsernameAction($username)
+    {
         return $this->queryRepo()->findOneByUsername($username);
     }
 
@@ -71,7 +74,8 @@ class UserController extends FOSRestController {
      * section = "Users"
      * )
      */
-    public function getUserByIdAction($id) {
+    public function getUserByIdAction($id)
+    {
         return $this->queryRepo()->findOneById($id);
     }
 
@@ -89,7 +93,8 @@ class UserController extends FOSRestController {
      * section = "Users"
      * )
      */
-    public function getUserByEmailAction($email) {
+    public function getUserByEmailAction($email)
+    {
         return $this->queryRepo()->findOneByEmail($email);
     }
 
@@ -106,13 +111,50 @@ class UserController extends FOSRestController {
      * section = "Users"
      * )
      */
-    public function postUserAction(Request $request) {
+    public function postUserAction(Request $request)
+    {
+        $http_response = new Response();
+
+        $data = $request->request->all();
+
+        $http_response = new Response();
+
+//        /** @var $formFactory FactoryInterface */
+//        $formFactory = $this->get('fos_user.registration.form.factory');
+//        /** @var $userManager UserManagerInterface */
+//        $userManager = $this->get('fos_user.user_manager');
+//
+//        $user = $userManager->createUser();
+//        $user->setEnabled(true);
+//
+//        $tokenGenerator = $this->get('fos_user.util.token_generator');
+//        $user->setConfirmationToken($tokenGenerator->generateToken());
+//
+//
+//        $form = $formFactory->createForm();
+//        $form->setData($user);
+//
+//        $form->submit($data);
+//
+//
+//        if ($form->isSubmitted()) {
+//            if ($form->isValid()) {
+//                $userManager->updateUser($user);
+//                die('test');
+//                return $http_response->setStatusCode(201);
+//            } else {
+//                return $http_response->setStatusCode(400)->setContent(json_encode($this->getErrorMessages($form)));
+//            }
+//        }
+
+        //------------------------------------------------------
 
         $data = $request->request->all();
         $http_response = new Response();
 
-        if ($this->queryRepo()->findByEmail($data['email'])) {
-            return $http_response->setStatusCode(409);
+        $errors = $this->validator($data);
+        if ($errors != null) {
+            return $http_response->setStatusCode(400)->setContent(json_encode($errors));
         } else {
             $user = new User();
             $user->hydrate($data);
@@ -140,7 +182,8 @@ class UserController extends FOSRestController {
      * section = "Users"
      * )
      */
-    public function postUserChangePwAction(Request $request) {
+    public function postUserChangePwAction(Request $request)
+    {
 
         $data = $request->request->all();
         $http_response = new Response();
@@ -174,10 +217,58 @@ class UserController extends FOSRestController {
     /**
      * @return \Doctrine\Common\Persistence\ObjectRepository
      */
-    private function queryRepo() {
+    private function queryRepo()
+    {
         return $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
     }
 
+    private function validator($data)
+    {
+        $errors = array();
 
+        $errors['email'] = array();
+        $errors['pseudo'] = array();
+        $errors['mot de passe'] = array();
+
+        if (!isset($data['email'])) {
+            array_push($errors['email'], "l'email ne peut pas etre vide");
+        } else if ($data['email'] == "") {
+            array_push($errors['email'], "l'email ne peut pas etre vide");
+        } else if (count($this->queryRepo()->findByEmail($data['email'])) > 0) {
+            array_push($errors['email'], "cet email est déja utilisé");
+        } else if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            array_push($errors['email'], "cet email n'est pas valide");
+        }
+
+        if (!isset($data['username'])) {
+            array_push($errors['pseudo'], "le pseudo ne peut pas etre vide");
+        } else if ($data['username'] == "") {
+            array_push($errors['pseudo'], "le pseudo ne peut pas etre vide");
+        } else if (count($this->queryRepo()->findByUsername($data['username'])) > 0) {
+            array_push($errors['pseudo'], "ce pseudo est déja utilisé");
+        }
+
+        if (!isset($data['plainPassword'])) {
+            array_push($errors['mot de passe'], "le mot de passe ne peut pas etre vide");
+        } else if ($data['plainPassword'] == "") {
+            array_push($errors['mot de passe'], "le mot de passe ne peut pas etre vide");
+        }
+
+        $bool = count($errors['email']) + count($errors['pseudo']) + count($errors['mot de passe']) > 0;
+
+        foreach ($errors as $errorName => $errorValues) {
+            if (count($errorValues) == 0) {
+                unset($errors[$errorName]);
+            }
+        }
+
+
+        if ($bool) {
+            return $errors;
+        } else {
+            return null;
+        }
+
+    }
 
 }

@@ -4,6 +4,7 @@ namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -21,6 +22,16 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @Assert\Length(
+     *     min=12,
+     *     max=4096,
+     *     minMessage="user.password.short",
+     *     groups={"Profile", "ResetPassword", "Registration", "ChangePassword"}
+     * )
+     */
+    protected $plainPassword;
 
     /**
      * @var int
@@ -61,5 +72,62 @@ class User extends BaseUser
         $this->setEmailCanonical($data['email']);
         $this->setPlainPassword($data['plainPassword']);
     }
-}
 
+    /**
+     * Set points
+     *
+     * @param integer $points
+     *
+     * @return User
+     */
+    public function setPoints($points)
+    {
+        $this->points = $points;
+
+        return $this;
+    }
+
+    /**
+     * Get points
+     *
+     * @return integer
+     */
+    public function getPoints()
+    {
+        return $this->points;
+    }
+
+    /**
+     * Add parisFait
+     *
+     * @param \CoreBundle\Entity\PariFait $parisFait
+     *
+     * @return User
+     */
+    public function addParisFait(\CoreBundle\Entity\PariFait $parisFait)
+    {
+        $this->parisFaits[] = $parisFait;
+
+        return $this;
+    }
+
+    /**
+     * Remove parisFait
+     *
+     * @param \CoreBundle\Entity\PariFait $parisFait
+     */
+    public function removeParisFait(\CoreBundle\Entity\PariFait $parisFait)
+    {
+        $this->parisFaits->removeElement($parisFait);
+    }
+
+    /**
+     * Get parisFaits
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getParisFaits()
+    {
+        return $this->parisFaits;
+    }
+}
